@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, substituteAll
-, pkgconfig, autoreconfHook
+{ stdenv, fetchFromGitHub, substituteAll
+, pkgconfig, autoreconfHook, bison, flex, libtool
 , gmp, python, iptables, ldns, unbound, openssl, pcsclite
 , openresolv
 , systemd, pam
@@ -17,19 +17,20 @@
 with stdenv.lib;
 
 stdenv.mkDerivation rec {
-  name = "strongswan-${version}";
-  version = "5.7.1";
+  name = "strongswan";
 
-  src = fetchurl {
-    url = "https://download.strongswan.org/${name}.tar.bz2";
-    sha256 = "1v2b8lnqrkbc9hx3p2rw36xvphdy5ayy3dblm3kz98p24s8rqvq0";
+  src = fetchFromGitHub {
+    owner  = "codemonkeylabs-de";
+    repo   = "strongswan";
+    rev    = "04ef28b4df495c4b748e677f670d7f2d0b28fbbf";
+    sha256 = "17142xi7zr55n7xiaqqasv6lfdabvqhav5g7mdby9fpmaqmxkl7d";
   };
 
   dontPatchELF = true;
 
   nativeBuildInputs = [ pkgconfig autoreconfHook ];
   buildInputs =
-    [ curl gmp python iptables ldns unbound openssl pcsclite ]
+    [ curl gmp python iptables ldns unbound openssl pcsclite bison flex libtool ]
     ++ optionals enableTNC [ trousers sqlite libxml2 ]
     ++ optionals stdenv.isLinux [ systemd.dev pam ]
     ++ optionals enableNetworkManager [ networkmanager ]
