@@ -1,5 +1,5 @@
-{ stdenv, fetchurl
-, pkgconfig, autoreconfHook
+{ stdenv, fetchFromGitHub
+, pkgconfig, autoreconfHook, bison, flex, libtool
 , gmp, python, iptables, ldns, unbound, openssl, pcsclite
 , openresolv
 , systemd, pam
@@ -11,19 +11,20 @@
 with stdenv.lib;
 
 stdenv.mkDerivation rec {
-  name = "strongswan-${version}";
-  version = "5.6.1";
+  name = "strongswan";
 
-  src = fetchurl {
-    url = "http://download.strongswan.org/${name}.tar.bz2";
-    sha256 = "0lxbyiary8iapx3ysw40czrmxf983fhfzs5mvz2hk1j1mpc85hp0";
+  src = fetchFromGitHub {
+    owner  = "codemonkeylabs-de";
+    repo   = "strongswan";
+    rev    = "16598bae0a05db894e0e0976b44a67df53ec1139";
+    sha256 = "1a6n2244ma6yjrny7jjkh4sc07kp5ci7ci9lis0hm5s9wdqfr65g";
   };
 
   dontPatchELF = true;
 
   nativeBuildInputs = [ pkgconfig autoreconfHook ];
   buildInputs =
-    [ gmp python iptables ldns unbound openssl pcsclite ]
+    [ gmp python iptables ldns unbound openssl pcsclite bison flex libtool ]
     ++ optionals enableTNC [ curl trousers sqlite libxml2 ]
     ++ optionals stdenv.isLinux [ systemd.dev pam ]
     ++ optionals enableNetworkManager [ networkmanager ];
@@ -61,7 +62,7 @@ stdenv.mkDerivation rec {
       "--enable-eap-mschapv2" "--enable-eap-radius" "--enable-xauth-eap" "--enable-ext-auth"
       "--enable-forecast" "--enable-connmark" "--enable-acert"
       "--enable-pkcs11" "--enable-eap-sim-pcsc" "--enable-dnscert" "--enable-unbound"
-      "--enable-af-alg" "--enable-xauth-pam" "--enable-chapoly" ]
+      "--enable-af-alg" "--enable-xauth-pam" "--enable-chapoly" "--enable-json" ]
     ++ optionals stdenv.isx86_64 [ "--enable-aesni" "--enable-rdrand" ]
     ++ optional (stdenv.system == "i686-linux") "--enable-padlock"
     ++ optionals enableTNC [
