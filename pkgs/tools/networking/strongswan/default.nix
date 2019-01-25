@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub, substituteAll
-, pkgconfig, autoreconfHook, bison, flex, libtool, gperf
+, pkgconfig, autoreconfHook, bison, flex, libtool, perl, gperf
 , gmp, python, iptables, ldns, unbound, openssl, pcsclite
 , openresolv
 , systemd, pam
@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ pkgconfig autoreconfHook ];
   buildInputs =
-    [ curl gmp python iptables ldns unbound openssl pcsclite gperf bison flex libtool ]
+    [ curl gmp python iptables ldns unbound openssl pcsclite perl gperf bison flex libtool ]
     ++ optionals enableTNC [ trousers sqlite libxml2 ]
     ++ optionals stdenv.isLinux [ systemd.dev pam ]
     ++ optionals enableNetworkManager [ networkmanager ]
