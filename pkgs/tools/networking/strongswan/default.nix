@@ -22,8 +22,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner  = "codemonkeylabs-de";
     repo   = "strongswan";
-    rev    = "04ef28b4df495c4b748e677f670d7f2d0b28fbbf";
-    sha256 = "17142xi7zr55n7xiaqqasv6lfdabvqhav5g7mdby9fpmaqmxkl7d";
+    rev    = "f7c6f844263c0b4e36e048fbc69fa45f1607c097";
+    sha256 = "1cwrs5blcxs4xiwvg1lm0haskagzrdjd421gcbnlk22ida6acncf";
   };
 
   dontPatchELF = true;
